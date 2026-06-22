@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head><!--thanos-guard--><script>if(sessionStorage.getItem('thanos_auth')!=='ok'){document.documentElement.style.visibility='hidden';location.replace('/curso_yaml/');}</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Linter YAML</title>
+<style>
+:root{--green:#00b86b;--green-d:#019e5b;--sec:#31bcab;--bg:#f5f7fa;--panel:#ffffff;--panel2:#eef3f8;--border:#e2e8f0;--muted:#64748b;--ink:#1e293b;--soft:#f1f5f9;--danger:#ef4444;--warn:#f59e0b;--shadow:0 2px 10px rgba(15,23,42,.06)}
+*{box-sizing:border-box;font-family:'Nunito','Segoe UI',system-ui,sans-serif;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);padding:1.2rem;font-size:15px;line-height:1.6}
+h2{font-size:1.25rem;color:var(--green-d);margin-bottom:.3rem;font-weight:800}
+.sub{color:var(--muted);font-size:13.5px;margin-bottom:1rem}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:.6rem}
+@media(max-width:720px){.cols{grid-template-columns:1fr}}
+label{display:block;font-size:12.5px;color:var(--muted);margin:.5rem 0 .2rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+textarea,input.txt{width:100%;background:#0f172a;color:#e2e8f0;border:1px solid #cbd5e1;border-radius:10px;padding:.7rem .85rem;font-family:'Consolas',monospace;font-size:13.5px;outline:none}
+textarea{min-height:170px;resize:vertical}
+input.txt{font-family:'Consolas',monospace}
+textarea:focus,input.txt:focus{border-color:var(--green)}
+.btn{padding:.6rem 1.1rem;border:0;border-radius:10px;background:var(--green);color:#fff;font-weight:800;cursor:pointer;font-size:14px;box-shadow:0 3px 10px rgba(0,184,107,.25);transition:.15s;margin-top:.6rem}
+.btn:hover{background:var(--green-d)}
+.btn.alt{background:var(--panel);color:var(--green-d);border:1.5px solid var(--green)}
+.row{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.6rem}
+.out{background:#0f172a;color:#e2e8f0;border:1px solid #1e293b;border-radius:10px;padding:1rem;font-family:'Consolas',monospace;font-size:13px;min-height:140px;white-space:pre-wrap;overflow:auto}
+pre.yaml{background:#0f172a;color:#e2e8f0;border:1px solid #1e293b;border-radius:10px;padding:1rem;font-family:'Consolas',monospace;font-size:13px;overflow:auto;margin:.4rem 0;white-space:pre}
+pre.yaml .k{color:#5eead4}pre.yaml .v{color:#fbbf24}pre.yaml .c{color:#64748b;font-style:italic}
+.tag{display:inline-block;font-size:11px;font-weight:800;padding:.15rem .5rem;border-radius:6px;margin:2px}
+.tag.ok{background:#d1f7e3;color:#065f33}.tag.warn{background:#fef3c7;color:#92400e}.tag.bad{background:#fee2e2;color:#991b1b}.tag.blue{background:#dbeafe;color:#1e40af}
+.tip{background:#e7f8f0;border-left:4px solid var(--green);padding:.7rem 1rem;border-radius:8px;color:#065f33;margin:.8rem 0;font-size:13.5px}
+.tip b{color:var(--green-d)}
+.warnb{background:#fef9e7;border-left:4px solid var(--warn);padding:.7rem 1rem;border-radius:8px;color:#78350f;margin:.8rem 0;font-size:13.5px}
+.badb{background:#fee2e7;border-left:4px solid var(--danger);padding:.7rem 1rem;border-radius:8px;color:#991b1b;margin:.8rem 0;font-size:13.5px}
+.blueb{background:#eff6ff;border-left:4px solid #3b82f6;padding:.7rem 1rem;border-radius:8px;color:#1e40af;margin:.8rem 0;font-size:13.5px}
+code.i{background:#0f172a;color:#5eead4;padding:.12rem .4rem;border-radius:5px;font-family:'Consolas',monospace;font-size:12.5px}
+.tree{font-family:'Consolas',monospace;font-size:13.5px;line-height:1.95}
+.tree .node{cursor:pointer;user-select:none}
+.tree .node:hover{color:var(--green-d)}
+.tree .key{color:var(--green-d)}.tree .val{color:#b45309}.tree .arr{color:#2563eb}
+.tree .icon{display:inline-block;width:14px;color:#94a3b8}
+.tree .children{margin-left:18px;border-left:1px dashed #cbd5e1;padding-left:10px}
+table{width:100%;border-collapse:collapse;font-size:13px;margin-top:.4rem}
+th,td{padding:.45rem .6rem;text-align:left;border-bottom:1px solid var(--border)}
+th{background:#e7f8f0;color:var(--green-d);font-weight:800;font-size:12px;text-transform:uppercase}
+.cmp3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.7rem;margin-top:.4rem}
+@media(max-width:720px){.cmp3{grid-template-columns:1fr}}
+.cmp3 .bx{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:.8rem}
+.cmp3 .bx h4{font-size:12px;letter-spacing:.5px;margin-bottom:.4rem}
+.chat{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:.8rem;margin-top:.6rem}
+.chat .me{background:var(--soft);border-radius:10px;padding:.55rem .8rem;margin:.4rem 0}
+.chat .ai{background:#e7f8f0;border:1px solid #c7ecd9;border-radius:10px;padding:.55rem .8rem;margin:.4rem 0}
+.chat .who{font-weight:800;font-size:12px}
+.chat .me .who{color:#64748b}.chat .ai .who{color:var(--green-d)}
+</style>
+</head>
+<body>
+<h2>Linter — Encuentra los errores</h2>
+<p class="sub">Este YAML tiene errores a propósito. Analízalo, lee los avisos y arréglalos. Vuelve a analizar hasta que todo esté correcto.</p>
+
+<div class="cols">
+  <div>
+    <textarea id="yaml">nombre:Luna
+edad: 3
+tipo: gato
+vacunas:
+   - rabia
+	- moquillo
+direccion :null</textarea>
+    <button class="btn" onclick="run()">🩺 Analizar errores</button>
+  </div>
+  <div id="out" class="out" style="min-height:240px"></div>
+</div>
+<div class="warnb"><b>Pistas:</b> hay un TAB (tabulador), una indentación impar, y dos puntos sin espacio.</div>
+<script>
+function run(){
+  const code=document.getElementById('yaml').value;const out=document.getElementById('out');const issues=[];
+  code.split(/\r?\n/).forEach((raw,i)=>{
+    const ln=i+1;if(!raw.trim()||raw.trim().startsWith('#'))return;
+    if(/\t/.test(raw))issues.push({ln,t:'bad',m:'Usa TAB — YAML prohíbe tabuladores. Usa espacios.'});
+    const indent=raw.length-raw.replace(/^\s+/,'').length;
+    if(indent%2!==0)issues.push({ln,t:'warn',m:`Indentación ${indent} (no par). Se recomiendan 2 espacios por nivel.`});
+    const tr=raw.trim();
+    if(!tr.startsWith('-')){const m=tr.match(/^([^:]+):(.*)$/);
+      if(!m)issues.push({ln,t:'bad',m:'Línea sin formato clave: valor ni guión de lista.'});
+      else if(m[2]&&!m[2].startsWith(' ')&&m[2].trim()!=='')issues.push({ln,t:'bad',m:'Falta espacio después de los dos puntos (":").'});}
+  });
+  if(!issues.length)out.innerHTML='<div class="tip"><b>✓ ¡Todo correcto!</b> No se detectaron errores comunes. Tu YAML sigue las reglas de oro.</div>';
+  else{let h=`<div style="margin-bottom:.6rem;font-weight:800;color:var(--warn)">Se encontraron ${issues.length} avisos:</div>`;
+    h+=issues.map(x=>`<div class="${x.t==='bad'?'badb':'warnb'}" style="margin:.5rem 0;padding:.55rem .8rem"><b>Línea ${x.ln}</b> — ${x.m}</div>`).join('');
+    out.innerHTML=h;}
+}
+</script>
+</body></html>

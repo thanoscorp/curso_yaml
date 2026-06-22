@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Acceso al curso — Thanos Corp</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:'Segoe UI',system-ui,-apple-system,Roboto,sans-serif;
+    background:radial-gradient(circle at 50% 25%,#0a0f1a,#000 70%);
+    color:#fff;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:1rem;
+  }
+  .card{
+    background:#111827;border:1px solid #1e3a5f;border-radius:14px;
+    padding:2.4rem;width:100%;max-width:400px;box-shadow:0 10px 40px rgba(0,0,0,.6);
+  }
+  h1{font-size:1.45rem;font-weight:800;margin-bottom:.35rem;color:#00ff41;letter-spacing:.3px}
+  p.sub{color:#9ca3af;font-size:.85rem;margin-bottom:1.6rem;line-height:1.4}
+  label{display:block;font-size:.78rem;color:#9ca3af;margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.5px}
+  input{
+    width:100%;padding:.85rem 1rem;border-radius:9px;border:1px solid #2d4a6f;
+    background:#0d1321;color:#fff;font-size:1rem;outline:none;transition:border-color .2s;
+  }
+  input:focus{border-color:#00ff41;box-shadow:0 0 0 3px rgba(0,255,65,.12)}
+  button{
+    width:100%;margin-top:1.1rem;padding:.85rem;border:0;border-radius:9px;
+    background:#00ff41;color:#0a0f1a;font-weight:800;font-size:1rem;cursor:pointer;
+    transition:background .25s,transform .05s;
+  }
+  button:hover{background:#00cc33}
+  button:active{transform:translateY(1px)}
+  .err{color:#ff4444;font-size:.82rem;margin-top:.8rem;min-height:1.2rem}
+  .brand{display:flex;align-items:center;justify-content:center;gap:.5rem;margin-top:1.6rem;font-size:.78rem;color:#6b7280}
+  .brand b{color:#00ff41;letter-spacing:.5px}
+  .meta{margin-top:1rem;font-size:.72rem;color:#4b5563;text-align:center;line-height:1.5}
+</style>
+</head>
+<body>
+  <form id="login" autocomplete="off" spellcheck="false">
+    <div class="card">
+      <h1>Acceso al curso</h1>
+      <p class="sub">Curso completo de YAML — de 0 a 100. Ingresá el código de acceso para continuar.</p>
+      <label for="code">Código de acceso</label>
+      <input type="password" id="code" placeholder="••••••••••••" autofocus>
+      <button type="submit">Entrar</button>
+      <div class="err" id="err" role="alert"></div>
+      <div class="brand"><b>Thanos</b> Corp</div>
+      <div class="meta">Curso didáctico para principiantes · Audio por sección · Simulaciones interactivas</div>
+    </div>
+  </form>
+  <script>
+    (function(){
+      // The access code is NOT hardcoded here — it is read at runtime from .env
+      // (ACCESS_CODE=...). If the code matches, the session is unlocked and the
+      // user is taken to the course. If not, access is denied.
+      var ACCESS_CODE = null;
+      var envLoaded = false;
+
+      function loadEnv(){
+        return fetch('.env', { cache: 'no-store' })
+          .then(function(r){ if(!r.ok) throw new Error('env-fetch-' + r.status); return r.text(); })
+          .then(function(txt){
+            var m = txt.match(/^ACCESS_CODE\s*=\s*(.+?)\s*$/m);
+            if(!m) throw new Error('env-no-key');
+            ACCESS_CODE = m[1];
+            envLoaded = true;
+          })
+          .catch(function(){
+            // Fallback in case the dotfile is not served by Pages.
+            return fetch('env.txt', { cache: 'no-store' })
+              .then(function(r){ if(!r.ok) throw new Error('env2-fetch-' + r.status); return r.text(); })
+              .then(function(txt){
+                var m = txt.match(/^ACCESS_CODE\s*=\s*(.+?)\s*$/m);
+                if(!m) throw new Error('env2-no-key');
+                ACCESS_CODE = m[1];
+                envLoaded = true;
+              });
+          });
+      }
+
+      loadEnv().catch(function(){ /* errors handled on submit */ });
+
+      if (sessionStorage.getItem('thanos_auth') === 'ok') {
+        location.replace('Curso_yaml.html');
+        return;
+      }
+
+      var form = document.getElementById('login');
+      var code = document.getElementById('code');
+      var err  = document.getElementById('err');
+
+      form.addEventListener('submit', function(e){
+        e.preventDefault();
+        var check = function(){
+          if(!envLoaded){
+            err.textContent = 'Cargando configuración, esperá un segundo e intentá de nuevo.';
+            return;
+          }
+          if(ACCESS_CODE === null){
+            err.textContent = 'No se pudo cargar la configuración de acceso.';
+            return;
+          }
+          if (code.value === ACCESS_CODE) {
+            sessionStorage.setItem('thanos_auth', 'ok');
+            location.replace('Curso_yaml.html');
+          } else {
+            err.textContent = 'Código incorrecto. Intentalo de nuevo.';
+            code.value = '';
+            code.focus();
+          }
+        };
+        if(!envLoaded){
+          loadEnv().then(check).catch(check);
+        } else {
+          check();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

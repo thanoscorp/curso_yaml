@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head><!--thanos-guard--><script>if(sessionStorage.getItem('thanos_auth')!=='ok'){document.documentElement.style.visibility='hidden';location.replace('/curso_yaml/');}</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Constructor de agente.md</title>
+<style>
+:root{--green:#00b86b;--green-d:#019e5b;--sec:#31bcab;--bg:#f5f7fa;--panel:#ffffff;--panel2:#eef3f8;--border:#e2e8f0;--muted:#64748b;--ink:#1e293b;--soft:#f1f5f9;--danger:#ef4444;--warn:#f59e0b;--shadow:0 2px 10px rgba(15,23,42,.06)}
+*{box-sizing:border-box;font-family:'Nunito','Segoe UI',system-ui,sans-serif;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);padding:1.2rem;font-size:15px;line-height:1.6}
+h2{font-size:1.25rem;color:var(--green-d);margin-bottom:.3rem;font-weight:800}
+.sub{color:var(--muted);font-size:13.5px;margin-bottom:1rem}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:.6rem}
+@media(max-width:720px){.cols{grid-template-columns:1fr}}
+label{display:block;font-size:12.5px;color:var(--muted);margin:.5rem 0 .2rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+textarea,input.txt{width:100%;background:#0f172a;color:#e2e8f0;border:1px solid #cbd5e1;border-radius:10px;padding:.7rem .85rem;font-family:'Consolas',monospace;font-size:13.5px;outline:none}
+textarea{min-height:170px;resize:vertical}
+input.txt{font-family:'Consolas',monospace}
+textarea:focus,input.txt:focus{border-color:var(--green)}
+.btn{padding:.6rem 1.1rem;border:0;border-radius:10px;background:var(--green);color:#fff;font-weight:800;cursor:pointer;font-size:14px;box-shadow:0 3px 10px rgba(0,184,107,.25);transition:.15s;margin-top:.6rem}
+.btn:hover{background:var(--green-d)}
+.btn.alt{background:var(--panel);color:var(--green-d);border:1.5px solid var(--green)}
+.row{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.6rem}
+.out{background:#0f172a;color:#e2e8f0;border:1px solid #1e293b;border-radius:10px;padding:1rem;font-family:'Consolas',monospace;font-size:13px;min-height:140px;white-space:pre-wrap;overflow:auto}
+pre.yaml{background:#0f172a;color:#e2e8f0;border:1px solid #1e293b;border-radius:10px;padding:1rem;font-family:'Consolas',monospace;font-size:13px;overflow:auto;margin:.4rem 0;white-space:pre}
+pre.yaml .k{color:#5eead4}pre.yaml .v{color:#fbbf24}pre.yaml .c{color:#64748b;font-style:italic}
+.tag{display:inline-block;font-size:11px;font-weight:800;padding:.15rem .5rem;border-radius:6px;margin:2px}
+.tag.ok{background:#d1f7e3;color:#065f33}.tag.warn{background:#fef3c7;color:#92400e}.tag.bad{background:#fee2e2;color:#991b1b}.tag.blue{background:#dbeafe;color:#1e40af}
+.tip{background:#e7f8f0;border-left:4px solid var(--green);padding:.7rem 1rem;border-radius:8px;color:#065f33;margin:.8rem 0;font-size:13.5px}
+.tip b{color:var(--green-d)}
+.warnb{background:#fef9e7;border-left:4px solid var(--warn);padding:.7rem 1rem;border-radius:8px;color:#78350f;margin:.8rem 0;font-size:13.5px}
+.badb{background:#fee2e7;border-left:4px solid var(--danger);padding:.7rem 1rem;border-radius:8px;color:#991b1b;margin:.8rem 0;font-size:13.5px}
+.blueb{background:#eff6ff;border-left:4px solid #3b82f6;padding:.7rem 1rem;border-radius:8px;color:#1e40af;margin:.8rem 0;font-size:13.5px}
+code.i{background:#0f172a;color:#5eead4;padding:.12rem .4rem;border-radius:5px;font-family:'Consolas',monospace;font-size:12.5px}
+.tree{font-family:'Consolas',monospace;font-size:13.5px;line-height:1.95}
+.tree .node{cursor:pointer;user-select:none}
+.tree .node:hover{color:var(--green-d)}
+.tree .key{color:var(--green-d)}.tree .val{color:#b45309}.tree .arr{color:#2563eb}
+.tree .icon{display:inline-block;width:14px;color:#94a3b8}
+.tree .children{margin-left:18px;border-left:1px dashed #cbd5e1;padding-left:10px}
+table{width:100%;border-collapse:collapse;font-size:13px;margin-top:.4rem}
+th,td{padding:.45rem .6rem;text-align:left;border-bottom:1px solid var(--border)}
+th{background:#e7f8f0;color:var(--green-d);font-weight:800;font-size:12px;text-transform:uppercase}
+.cmp3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.7rem;margin-top:.4rem}
+@media(max-width:720px){.cmp3{grid-template-columns:1fr}}
+.cmp3 .bx{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:.8rem}
+.cmp3 .bx h4{font-size:12px;letter-spacing:.5px;margin-bottom:.4rem}
+.chat{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:.8rem;margin-top:.6rem}
+.chat .me{background:var(--soft);border-radius:10px;padding:.55rem .8rem;margin:.4rem 0}
+.chat .ai{background:#e7f8f0;border:1px solid #c7ecd9;border-radius:10px;padding:.55rem .8rem;margin:.4rem 0}
+.chat .who{font-weight:800;font-size:12px}
+.chat .me .who{color:#64748b}.chat .ai .who{color:var(--green-d)}
+</style>
+</head>
+<body>
+<h2>Constructor de agente.md</h2>
+<p class="sub">Crea tu propio agente rellenando los campos. ¡Dale identidad a un ayudante IA!</p>
+
+<div class="cols">
+  <div>
+    <label>identity · name</label><input class="txt" id="name" value="Tutor Mate">
+    <label>identity · purpose</label><input class="txt" id="purpose" value="Enseñar matemáticas con ejemplos">
+    <label>personality · tone</label><input class="txt" id="tone" value="paciente y motivador">
+    <label>knowledge — temas (separados por comas)</label><input class="txt" id="know" value="Álgebra, Geometría, Fracciones">
+    <label>instructions — reglas (separadas por comas)</label><input class="txt" id="inst" value="Usar ejemplos visuales, Confirmar el nivel del alumno">
+    <button class="btn" onclick="run()">🤖 Crear agente</button>
+  </div>
+  <div id="out" class="out" style="min-height:260px"></div>
+</div>
+<script>
+function yamlParse(text){
+  const root={};const stack=[{indent:-1,node:root,key:null,obj:null}];
+  const peek=()=>stack[stack.length-1];
+  for(let raw of text.split(/\r?\n/)){
+    if(!raw.trim()||raw.trim().startsWith('#'))continue;
+    const indent=raw.length-raw.replace(/^\s+/,'').length;
+    let line=raw.trim(),m;
+    if(line==='-'||/^- /.test(line)){
+      while(peek().indent>=indent&&stack.length>1)stack.pop();
+      const parent=peek();const target=parent.obj||parent.node;
+      let arr=parent.obj?parent._arr:(parent.node[parent.key]||(parent.node[parent.key]=[]));
+      if(parent.obj&&!parent._arr){parent._arr=arr=[];parent.obj[parent._arrKey]=arr;}
+      const rest=line==='-'?'':line.replace(/^-\s*/,'').trim();
+      if(rest){
+        const km=rest.match(/^([^:]+):\s*(.*)$/);
+        if(km){const obj={};arr.push(obj);if(km[2].trim())obj[km[1].trim()]=scalar(km[2]);stack.push({indent:indent+2,obj,_arr:null});}
+        else arr.push(scalar(rest));
+      }else{const obj={};arr.push(obj);stack.push({indent:indent+2,obj,_arr:null});}
+      continue;
+    }
+    m=line.match(/^([^:]+):\s*(.*)$/);
+    if(m){
+      while(peek().indent>=indent&&stack.length>1)stack.pop();
+      const key=m[1].trim(),val=m[2];let t=peek();
+      if(t.obj){t.obj[key]=val&&val.trim()!==''?scalar(val):{};if(!val||val.trim()==='')stack.push({indent:indent+2,obj:null});}
+      else{if(val&&val.trim()!=='')t.node[key]=scalar(val);else{t.node[key]={};stack.push({indent:indent+2,node:t.node[key],key,obj:null});}}
+    }
+  }
+  return root;
+}
+function scalar(v){v=(''+v).trim().replace(/^["']|["']$/g,'').split(/\s+#/)[0].trim();
+  if(v==='null'||v==='~'||v==='')return null;if(v==='true'||v==='True')return true;if(v==='false'||v==='False')return false;
+  if(/^-?\d+$/.test(v))return parseInt(v,10);if(/^-?\d+\.\d+$/.test(v))return parseFloat(v);return v;}
+function yamlType(v){if(v===null)return 'nulo';if(typeof v==='boolean')return 'booleano';if(typeof v==='number')return Number.isInteger(v)?'entero':'decimal';return 'texto';}
+function escapeHtml(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function hlYaml(s){s=escapeHtml(s);
+  s=s.replace(/(#.*?$)/g,'<span class="c">$1</span>');
+  s=s.replace(/^(\s*[\wáéíóúñ\- ]+):/gm,'<span class="k">$1</span>:');
+  s=s.replace(/(:\s)([^<\n]+)$/gm,'$1<span class="v">$2</span>');
+  return s;}
+function renderTree(obj,label){
+  if(obj===null)return `<div class="node"><span class="icon">•</span><span class="key">${escapeHtml(label)}:</span> <span class="val">null</span></div>`;
+  if(typeof obj!=='object')return `<div class="node"><span class="icon">•</span><span class="key">${escapeHtml(label)}:</span> <span class="val">${escapeHtml(String(obj))}</span> <span style="color:#94a3b8">(${yamlType(obj)})</span></div>`;
+  const isArr=Array.isArray(obj);
+  let html=`<div class="node"><span class="icon">▼</span><span class="key">${escapeHtml(label)}</span> <span class="arr">${isArr?'['+obj.length+']':'{'+Object.keys(obj).length+'}'}</span></div><div class="children">`;
+  if(isArr)obj.forEach((v,i)=>html+=renderTree(v,`[${i}]`));else for(const k in obj)html+=renderTree(obj[k],k);
+  return html+'</div>';}
+
+function run(){
+  const g=id=>document.getElementById(id).value.trim();
+  const name=g('name')||'Chef Casero',purpose=g('purpose')||'Recetas caseras',tone=g('tone')||'amable y motivador';
+  const kArr=g('know').split(',').map(s=>s.trim()).filter(Boolean);
+  const iArr=g('inst').split(',').map(s=>s.trim()).filter(Boolean);
+  let yaml=`# agente.md — Ficha del agente\nidentity:\n  name: "${name}"\n  purpose: "${purpose}"\n`;
+  yaml+=`personality:\n  tone: "${tone}"\n`;
+  yaml+=`knowledge:\n${kArr.map(k=>`  - "${k}"`).join('\n')}\n`;
+  yaml+=`instructions:\n${iArr.map(x=>`  - "${x}"`).join('\n')}\n`;
+  document.getElementById('out').innerHTML=`<pre class="yaml" style="margin:0;min-height:auto">${hlYaml(yaml)}</pre>
+    <div class="tip" style="margin-top:.7rem"><b>Ficha creada ✓</b> Este agente se llama <b style="color:var(--green-d)">${escapeHtml(name)}</b>, tiene un tono <i>${escapeHtml(tone)}</i>, domina ${kArr.length} temas y sigue ${iArr.length} reglas al responder. Es darle identidad a un ayudante IA.</div>`;
+}
+run();
+</script>
+</body></html>

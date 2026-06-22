@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="es">
+<head><!--thanos-guard--><script>if(sessionStorage.getItem('thanos_auth')!=='ok'){document.documentElement.style.visibility='hidden';location.replace('/curso_yaml/');}</script><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YAML de 0 a 100 — Curso Completo | Thanos Corp SAS</title>
+<style>
+  :root{--green:#00b86b;--green-d:#019e5b;--sec:#31bcab;--bg:#f5f7fa;--panel:#ffffff;--panel2:#eef3f8;--border:#e2e8f0;--muted:#64748b;--ink:#1e293b;--soft:#f1f5f9;--shadow:0 2px 10px rgba(15,23,42,.06)}
+  *{box-sizing:border-box;font-family:'Nunito','Segoe UI',system-ui,sans-serif}
+  html,body{margin:0;background:var(--bg);color:var(--ink)}
+  body{display:flex;min-height:100vh}
+  aside{width:270px;background:var(--panel);border-right:1px solid var(--border);position:fixed;top:0;left:0;bottom:0;overflow-y:auto;padding:.5rem 0;z-index:10;box-shadow:2px 0 12px rgba(15,23,42,.04)}
+  .brand{padding:1rem 1.1rem 1.1rem;border-bottom:1px solid var(--border)}
+  .brand h1{font-size:1.2rem;margin:0;color:var(--green-d);font-weight:800;letter-spacing:.3px}
+  .brand .tag{font-size:11px;color:var(--muted);margin-top:.25rem;line-height:1.45}
+  .brand .author{font-size:10.5px;color:var(--green-d);margin-top:.4rem;font-weight:700;line-height:1.4}
+  nav a{display:flex;align-items:center;gap:.55rem;padding:.5rem 1rem;color:#475569;text-decoration:none;font-size:13.5px;border-left:3px solid transparent;transition:.15s;font-weight:600}
+  nav a:hover{background:var(--soft);color:var(--ink)}
+  nav a.active{background:#e7f8f0;border-left-color:var(--green);color:var(--green-d);font-weight:800}
+  nav a .num{background:#e2e8f0;color:#64748b;border-radius:6px;font-size:10.5px;padding:.05rem .4rem;min-width:24px;text-align:center;font-weight:800}
+  nav a.active .num{background:var(--green);color:#fff}
+  nav .sec-title{padding:1rem 1rem .3rem;font-size:10px;text-transform:uppercase;color:#94a3b8;letter-spacing:1.2px;font-weight:800}
+  main{margin-left:270px;flex:1;padding:0;max-width:1120px}
+  .topbar{position:sticky;top:0;background:rgba(245,247,250,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:.7rem 2rem;display:flex;align-items:center;gap:1rem;z-index:5}
+  .topbar .prog{flex:1;height:8px;background:#e2e8f0;border-radius:8px;overflow:hidden}
+  .topbar .prog span{display:block;height:100%;background:linear-gradient(90deg,var(--green),var(--sec));width:0;transition:width .3s;border-radius:8px}
+  .topbar .pct{font-size:12.5px;color:var(--muted);min-width:42px;text-align:right;font-weight:700}
+  .menu-btn{display:none;background:none;border:1px solid var(--border);color:var(--ink);border-radius:8px;padding:.3rem .65rem;cursor:pointer;font-size:15px}
+  section{padding:2.2rem 2rem 3rem;display:none}
+  section.active{display:block}
+  section h2{font-size:1.7rem;color:var(--ink);margin:.4rem 0 .3rem;font-weight:800;line-height:1.2}
+  section .badge{display:inline-block;background:var(--green);color:#fff;font-size:10.5px;font-weight:800;padding:.2rem .55rem;border-radius:6px;text-transform:uppercase;letter-spacing:.5px;vertical-align:middle}
+  section .badge.q{background:#f59e0b;color:#fff}
+  section .badge.sim{background:var(--sec);color:#fff}
+  section .badge.new{background:#3b82f6;color:#fff}
+  section p{line-height:1.75;color:#334155;font-size:15.5px;margin:.8rem 0}
+  section .lead{font-size:17px;color:var(--ink);font-weight:600;margin:.6rem 0 1rem}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:1rem;margin:1.3rem 0}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:1.15rem;box-shadow:var(--shadow);transition:.15s}
+  .card:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(15,23,42,.08)}
+  .card h3{margin:0 0 .4rem;color:var(--green-d);font-size:1rem;font-weight:800}
+  .card p{margin:0;font-size:13.5px;color:#475569;line-height:1.6}
+  .card .ic{font-size:1.6rem;margin-bottom:.2rem}
+  .audio{background:linear-gradient(135deg,#e7f8f0,#f0fafa);border:1px solid #c7ecd9;border-radius:14px;padding:.7rem 1rem;margin:1.3rem 0;display:flex;align-items:center;gap:1rem;box-shadow:var(--shadow)}
+  .audio .lbl{font-size:13px;color:var(--green-d);min-width:96px;font-weight:800}
+  .audio audio{flex:1;height:40px}
+  .frame-wrap{background:#0c0c0c;border:1px solid var(--border);border-radius:14px;overflow:hidden;margin:1.3rem 0;box-shadow:0 8px 28px rgba(15,23,42,.12)}
+  .frame-wrap .fhead{background:#1a2340;padding:.5rem .9rem;font-size:12px;color:#9ca3af;display:flex;justify-content:space-between}
+  .frame-wrap .fhead span:first-child{color:#cbd5e1;font-weight:700}
+  .frame-wrap iframe{width:100%;border:0;display:block;background:#fff}
+  .h-sim{height:760px}
+  .vidpl{display:grid;grid-template-columns:1fr 300px;gap:1rem;margin:1.3rem 0}
+  @media(max-width:760px){.vidpl{grid-template-columns:1fr}}
+  .vidpl .player{background:#000;border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:0 8px 28px rgba(15,23,42,.12);display:flex;flex-direction:column}
+  .vidpl .player video{width:100%;display:block;max-height:440px;background:#000;min-height:200px}
+  .vidpl .now{background:#1a2340;color:#e2e8f0;font-size:13px;padding:.6rem .9rem;font-weight:700;border-top:1px solid #2d4a6f}
+  .vidpl .now small{color:#94a3b8;font-weight:600;display:block;margin-top:.15rem;font-size:11px}
+  .vidpl .list{background:var(--panel);border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);max-height:460px;overflow-y:auto}
+  .vidpl .list .vh{padding:.55rem .8rem;background:#e7f8f0;color:var(--green-d);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;position:sticky;top:0;border-bottom:1px solid var(--border)}
+  .vidpl .list .vitem{display:flex;gap:.55rem;align-items:flex-start;padding:.55rem .8rem;cursor:pointer;border-bottom:1px solid var(--border);font-size:12.5px;color:#334155;transition:.12s}
+  .vidpl .list .vitem:hover{background:var(--soft)}
+  .vidpl .list .vitem.active{background:#e7f8f0;color:var(--green-d);font-weight:800}
+  .vidpl .list .vitem .vi{background:#e2e8f0;color:#64748b;border-radius:6px;font-size:10.5px;font-weight:800;min-width:22px;text-align:center;padding:.1rem .25rem;flex-shrink:0}
+  .vidpl .list .vitem.active .vi{background:var(--green);color:#fff}
+  .vidpl .list .vitem .vt{line-height:1.35}
+  .finale{text-align:center;padding:2rem 1rem 1rem}
+  .finale .big{font-size:3.4rem;margin:0;line-height:1}
+  .finale h2{font-size:2rem;margin:.6rem 0 .3rem}
+  .finale .lead{font-size:18px;color:var(--ink);font-weight:700;margin:1rem auto;max-width:640px}
+  .finale .cta{display:inline-flex;gap:.6rem;flex-wrap:wrap;justify-content:center;margin-top:1.2rem}
+  .finale .cta a{background:var(--green);color:#fff;border-radius:12px;padding:.8rem 1.4rem;font-weight:800;text-decoration:none;box-shadow:0 4px 14px rgba(0,184,107,.3)}
+  .finale .cta a.alt{background:var(--panel);color:var(--green-d);border:1.5px solid var(--green)}
+  table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:13.5px;background:var(--panel);border-radius:12px;overflow:hidden;box-shadow:var(--shadow)}
+  th,td{padding:.6rem .75rem;text-align:left}
+  th{background:#e7f8f0;color:var(--green-d);font-weight:800;font-size:12.5px;text-transform:uppercase;letter-spacing:.3px}
+  td{border-bottom:1px solid var(--border);color:#334155}
+  tr:last-child td{border-bottom:none}
+  td code,section code{background:#0f172a;color:#5eead4;padding:.18rem .45rem;border-radius:5px;font-family:'Consolas',monospace;font-size:12.5px}
+  pre.code{background:#0f172a;border:1px solid var(--border);border-radius:12px;padding:1rem 1.1rem;overflow:auto;font-family:'Consolas',monospace;font-size:13px;line-height:1.6;color:#e2e8f0;margin:1rem 0;white-space:pre}
+  pre.code .k{color:#5eead4}pre.code .v{color:#fbbf24}pre.code .c{color:#64748b;font-style:italic}
+  .cat{font-weight:800;color:var(--green-d);margin:1.4rem 0 .3rem;font-size:14px;text-transform:uppercase;letter-spacing:.5px}
+  .quiz{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:1.3rem 1.5rem;margin:1rem 0;box-shadow:var(--shadow)}
+  .quiz .q{margin-bottom:1.15rem}
+  .quiz .q .qt{font-weight:800;color:var(--ink);margin-bottom:.55rem;font-size:15px}
+  .quiz .opt{display:block;padding:.6rem .9rem;margin:.35rem 0;background:var(--soft);border:1.5px solid var(--border);border-radius:10px;cursor:pointer;font-size:14px;color:#334155;transition:.15s;font-weight:600}
+  .quiz .opt:hover{border-color:var(--sec);background:#f0fafa}
+  .quiz .opt.sel{border-color:var(--green);background:#e7f8f0;color:var(--green-d)}
+  .quiz .opt.correct{border-color:var(--green);background:#d1f7e3;color:#065f33;font-weight:800}
+  .quiz .opt.wrong{border-color:#ef4444;background:#fee2e2;color:#991b1b}
+  .quiz .check{background:var(--green);color:#fff;border:none;border-radius:10px;padding:.65rem 1.5rem;font-weight:800;cursor:pointer;font-size:14px;margin-top:.6rem;box-shadow:0 3px 10px rgba(0,184,107,.3)}
+  .quiz .check:hover{background:var(--green-d)}
+  .quiz .score{margin-top:.9rem;font-weight:800;font-size:15px;color:var(--ink)}
+  .tip{background:#e7f8f0;border-left:4px solid var(--green);padding:.75rem 1rem;border-radius:8px;color:#065f33;margin:1rem 0;font-size:14px}
+  .tip b{color:var(--green-d)}
+  .warn{background:#fef9e7;border-left:4px solid #f59e0b;padding:.75rem 1rem;border-radius:8px;color:#78350f;margin:1rem 0;font-size:14px}
+  .warn code{background:#fffbeb;color:#92400e;padding:.1rem .3rem;border-radius:4px;font-family:'Consolas',monospace}
+  .blue{background:#eff6ff;border-left:4px solid #3b82f6;padding:.75rem 1rem;border-radius:8px;color:#1e40af;margin:1rem 0;font-size:14px}
+  .blue b{color:#1e3a8a}
+  .nav-btns{display:flex;justify-content:space-between;margin-top:2.2rem;gap:1rem}
+  .nav-btns button{flex:1;background:var(--panel);border:1.5px solid var(--border);color:var(--ink);border-radius:12px;padding:.8rem;cursor:pointer;font-size:14.5px;font-weight:800;box-shadow:var(--shadow);transition:.15s}
+  .nav-btns button:hover{border-color:var(--green);color:var(--green-d);transform:translateY(-1px)}
+  .nav-btns button:disabled{opacity:.35;cursor:not-allowed;transform:none}
+  .links{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.3rem 0}
+  @media(max-width:760px){.links{grid-template-columns:1fr}}
+  .linkcard{display:flex;gap:.9rem;align-items:flex-start;background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:1rem 1.1rem;box-shadow:var(--shadow);text-decoration:none;color:inherit;transition:.15s}
+  .linkcard:hover{border-color:var(--green);transform:translateY(-2px);box-shadow:0 6px 18px rgba(15,23,42,.08)}
+  .linkcard .lic{font-size:1.6rem;flex-shrink:0}
+  .linkcard .lt{font-weight:800;color:var(--ink);font-size:14.5px}
+  .linkcard .ld{color:var(--muted);font-size:12.5px;margin-top:.2rem;line-height:1.5}
+  .linkcard .lh{color:var(--green-d);font-size:11.5px;margin-top:.35rem;word-break:break-all}
+  footer.site{padding:1.8rem 2rem 2.2rem;color:var(--muted);font-size:12.5px;text-align:center;border-top:1px solid var(--border);background:var(--panel)}
+  footer.site b{color:var(--green-d)}
+  @media(max-width:860px){
+    aside{transform:translateX(-100%);transition:.25s;width:248px}
+    aside.open{transform:translateX(0)}
+    main{margin-left:0}
+    .menu-btn{display:block}
+    section{padding:1.4rem 1rem 2rem}
+    .topbar{padding:.6rem 1rem}
+    section h2{font-size:1.4rem}
+  }
+  #cover{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;overflow-y:auto;padding:1.5rem;
+    background:radial-gradient(1200px 600px at 20% 10%,#0e3b2a 0%,transparent 60%),radial-gradient(1000px 700px at 85% 90%,#0a2a3a 0%,transparent 55%),linear-gradient(160deg,#0a0f0d 0%,#0d1a14 55%,#08130f 100%);color:#eaeaea}
+  #cover.hidden{display:none}
+  #cover .cv{max-width:980px;width:100%;text-align:center;animation:cvIn .7s cubic-bezier(.2,.8,.2,1)}
+  @keyframes cvIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+  #cover .kicker{display:inline-flex;align-items:center;gap:.5rem;background:rgba(0,255,127,.12);border:1px solid rgba(0,255,127,.4);color:#00ff7f;font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;padding:.4rem .9rem;border-radius:999px}
+  #cover .kicker .blink{width:8px;height:8px;border-radius:50%;background:#00ff7f;box-shadow:0 0 10px #00ff7f;animation:blink 1.1s steps(2) infinite}
+  @keyframes blink{50%{opacity:0}}
+  #cover h1.cv-title{font-size:clamp(2.8rem,8vw,5.2rem);margin:.6rem 0 .2rem;font-weight:800;line-height:1;letter-spacing:-1px;
+    background:linear-gradient(90deg,#00ff7f 0%,#31bcab 60%,#5eead4 100%);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:0 0 40px rgba(0,255,127,.15)}
+  #cover .cv-sub{font-size:clamp(1rem,2.6vw,1.35rem);color:#bfe6d4;font-weight:700;margin:.3rem auto 1.6rem;max-width:680px;line-height:1.5}
+  #cover .cv-term{display:inline-block;font-family:'Cascadia Code',Consolas,monospace;font-size:clamp(.9rem,2vw,1.1rem);background:#0c0c0c;border:1px solid #1e3a5f;border-radius:10px;padding:.6rem 1rem;color:#fff;margin-bottom:1.6rem;direction:ltr}
+  #cover .cv-term .p{color:#00ff7f;font-weight:700}
+  #cover .cv-term .cb{display:inline-block;width:9px;height:15px;background:#00ff7f;vertical-align:middle;margin-left:3px;animation:blink 1s steps(2) infinite}
+  #cover .cv-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;text-align:left;max-width:760px;margin:0 auto 1.6rem}
+  @media(max-width:680px){#cover .cv-grid{grid-template-columns:1fr}}
+  #cover .cv-card{background:rgba(255,255,255,.04);border:1px solid rgba(0,255,127,.18);border-radius:16px;padding:1.1rem 1.2rem;backdrop-filter:blur(6px)}
+  #cover .cv-card h3{margin:0 0 .5rem;font-size:1rem;color:#00ff7f;font-weight:800;display:flex;gap:.5rem;align-items:center}
+  #cover .cv-card p{margin:0;font-size:13.5px;line-height:1.6;color:#cdd6e0}
+  #cover .cv-card ul{margin:.4rem 0 0;padding-left:1.1rem;font-size:13px;color:#bcd;line-height:1.6}
+  #cover .cv-card li::marker{color:#00ff7f}
+  #cover .cv-cta{display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap;margin-top:.4rem}
+  #cover .btn-go{background:linear-gradient(90deg,#00ff7f,#31bcab);color:#06251a;border:none;border-radius:14px;padding:1rem 2.2rem;font-size:1.15rem;font-weight:800;cursor:pointer;box-shadow:0 10px 30px rgba(0,255,127,.35);transition:.18s;letter-spacing:.3px}
+  #cover .btn-go:hover{transform:translateY(-2px);box-shadow:0 14px 38px rgba(0,255,127,.5)}
+  #cover .cv-author{margin-top:1.8rem;font-size:13px;color:#9ca3af;letter-spacing:.4px}
+  #cover .cv-author b{color:#00ff7f;font-weight:800}
+  #cover .cv-author .sep{color:#31bcab;margin:0 .35rem}
+</style>
+</head>
+<body>
+<!-- ============ COVER ============ -->
+<div id="cover">
+  <div class="cv">
+    <span class="kicker"><span class="blink"></span> ENTRENAMIENTO DIDÁCTICO</span>
+    <h1 class="cv-title">YAML de 0 a 100</h1>
+    <div class="cv-sub">El lenguaje que le enseñas a la IA — <b style="color:#00ff7f">para principiantes absolutos</b></div>
+    <div class="cv-term"><span class="p">curso:</span> yaml<span class="cb"></span></div>
+
+    <div class="cv-grid">
+      <div class="cv-card">
+        <h3>📚 ¿De qué va este curso?</h3>
+        <p>Un entrenamiento práctico, para principiantes absolutos, sobre <b>YAML</b>: el lenguaje de datos que leen tanto humanos como máquinas. Aprendés qué es, cómo funciona, sus tipos, buenas prácticas y cómo se usa para crear <b>skills</b>, <b>agentes</b> y archivos <b>CLAUDE.md</b> — todo con simuladores interactivos donde practicar sin romper nada.</p>
+      </div>
+      <div class="cv-card">
+        <h3>🤖 ¿Por qué YAML si vas a trabajar con IA?</h3>
+        <ul>
+          <li>Las <b>skills</b> y los <b>agentes</b> de IA se definen con YAML.</li>
+          <li>El <b style="color:#00ff7f">CLAUDE.md</b> y los archivos de proyecto usan esta sintaxis.</li>
+          <li>Configuración de apps, CI/CD, Docker, Kubernetes… todo YAML.</li>
+          <li>Saber YAML hoy = estar listo para configurar la IA del futuro.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="cv-cta">
+      <button class="btn-go" onclick="startCourse()">▶ Iniciar el curso</button>
+    </div>
+
+    <div class="cv-author">
+      Entrenamiento creado por <b>Ing Richard Oliveros</b><span class="sep">·</span><b>Thanos Corp SAS</b>
+    </div>
+  </div>
+</div>
+<!-- ============ /COVER ============ -->
+<aside id="side">
+  <div class="brand">
+    <h1>YAML de 0 a 100</h1>
+    <div class="tag">El lenguaje que le enseñas a la IA · Skills + Agentes + CLAUDE.md</div>
+    <div class="author">Creado por Ing Richard Oliveros<br>Thanos Corp SAS</div>
+  </div>
+  <nav id="nav"></nav>
+</aside>
+
+<main>
+  <div class="topbar">
+    <button class="menu-btn" onclick="document.getElementById('side').classList.toggle('open')">☰ Menú</button>
+    <div class="prog"><span id="prog"></span></div>
+    <div class="pct" id="pct">0%</div>
+  </div>
+  <div id="content"></div>
+  <footer class="site"><b>Creado por Ing Richard Oliveros — Thanos Corp SAS</b><br>Curso autocontenido · funciona abriendo este archivo en cualquier navegador · 2026</footer>
+</main>
+
+<script>
+/* ---------- Videos locales ---------- */
+const VIDEOS=[
+  {i:1,file:'videos/01_o9pT9cWzbnI.mp4',title:'YAML Tutorial for Beginners — KodeKloud'},
+  {i:2,file:'videos/02_OybmIqMxDUc.mp4',title:'YAML Course for Beginners — The Coder Cave'}
+];
+
+/* ---------- Enlaces de interés ---------- */
+const LINKS=[
+  {ic:'🔴',t:'What is YAML? — Red Hat',d:'Explicación clara de qué es YAML y dónde se usa, por Red Hat.',h:'https://www.redhat.com/es/topics/automation/what-is-yaml'},
+  {ic:'🐧',t:'Tutorial de YAML — MuyLinux',d:'Tutorial en español para empezar con YAML desde cero.',h:'https://muylinux.xyz/tutorial-de-yaml-empezando-con-yaml/'},
+  {ic:'⚡',t:'Learn YAML in Y minutes',d:'Referencia rápida interactiva: aprendes la sintaxis en minutos.',h:'https://learnxinyminutes.com/es/yaml/'}
+];
+
+const SECTIONS=[
+  {n:1,title:'¿Qué es YAML?',type:'slide',group:'Introducción',audio:'audios/scene_01.mp3',
+   lead:'YAML es un lenguaje para guardar datos de forma que los entiendan igual los humanos y las máquinas.',
+   body:`<p><b>YAML</b> significa <i>"YAML Ain't Markup Language"</i> (sí, es un acrónimo recursivo 😄). Es un lenguaje para <b>guardar y transportar datos</b> de forma ordenada, pensado para que sea <b>fácil de leer y editar para cualquier persona</b>.</p>
+   <p>Imaginalo como una <b>lista de etiquetas</b> donde cada cosa tiene un nombre y un valor. Lo usan muchísimas herramientas modernas: Docker, Kubernetes, GitHub Actions, y sobre todo los <b>agentes de IA</b> para definir sus skills e instrucciones.</p>
+   <div class="cards">
+    <div class="card"><div class="ic">📝</div><h3>Legible</h3><p>Se lee casi como un texto natural. Sin símbolos raros.</p></div>
+    <div class="card"><div class="ic">🤖</div><h3>Estructurado</h3><p>Las máquinas lo parsean sin ambigüedad.</p></div>
+    <div class="card"><div class="ic">🔧</div><h3>Configurable</h3><p>Ideal para archivos de configuración de apps y de IA.</p></div>
+    <div class="card"><div class="ic">🌐</div><h3>Universal</h3><p>Docker, Kubernetes, CI/CD, Claude… todos lo usan.</p></div>
+   </div>
+   <div class="tip"><b>Para qué sirve:</b> guardar configuraciones, definir skills de IA, describir agentes, escribir instrucciones de proyecto (<code>CLAUDE.md</code>), y mucho más. En este curso lo vas a dominar desde cero.</div>`},
+
+  {n:2,title:'¿Por qué YAML es importante?',type:'sim',group:'Introducción',audio:'audios/scene_02.mp3',sim:'simulaciones/01_comparador.html',
+   lead:'Existen otros formatos (JSON, XML). Compara y entiende por qué YAML ganó para que lo editen humanos.',
+   body:`<p>Antes de YAML existían <b>JSON</b> (con muchas llaves y comillas) y <b>XML</b> (con etiquetas que se abren y cierran). Ambos funcionan, pero son <b>tediosos de escribir a mano</b>. YAML nació para ser <b>limpio y humano</b>.</p>
+   <div class="tip"><b>La gran ventaja:</b> YAML usa <b>indentación</b> (espacios a la izquierda) para organizar la información. No lleva llaves ni etiquetas. Por eso es el favorito para archivos que una persona tiene que editar.</div>
+   <p>En la simulación de abajo vas a ver los <b> mismos datos</b> escritos en los 3 formatos. Juzgá tú mismo cuál es más cómodo.</p>`},
+
+  {n:3,title:'Sintaxis básica: pares clave-valor',type:'sim',group:'Sintaxis',audio:'audios/scene_03.mp3',sim:'simulaciones/02_clave_valor.html',
+   lead:'La unidad mínima de YAML: una etiqueta (clave) y su contenido (valor), separados por dos puntos y un espacio.',
+   body:`<p>La estructura más básica de YAML es el <b>par clave-valor</b>:</p>
+   <pre class="code"><span class="k">nombre:</span> <span class="v">Luna</span>
+<span class="k">edad:</span> <span class="v">3</span>
+<span class="k">tipo:</span> <span class="v">gato</span></pre>
+   <div class="tip"><b>Regla de oro:</b> los dos puntos (<code>:</code>) van seguidos de <b>un espacio</b>. <code>nombre: Luna</code> ✅ &nbsp; <code>nombre:Luna</code> ❌</div>
+   <p>En la simulación vas a escribir tu propia clave y valor y verás cómo se forma YAML válido al instante, con el tipo de dato detectado.</p>`},
+
+  {n:4,title:'Listas y estructuras anidadas',type:'slide',group:'Sintaxis',audio:'audios/scene_04.mp3',
+   lead:'Cuando tenés varios elementos del mismo tipo, usás listas. Y cuando una clave contiene más claves, anidás con indentación.',
+   body:`<p><b>Listas</b>: cada elemento empieza con un guión y un espacio.</p>
+   <pre class="code"><span class="k">vacunas:</span>
+  <span class="v">- rabia</span>
+  <span class="v">- moquillo</span>
+  <span class="v">- leucemia</span></pre>
+   <p><b>Anidamiento</b>: la indentación (2 espacios por nivel) indica qué pertenece a qué.</p>
+   <pre class="code"><span class="k">mascota:</span>
+  <span class="k">nombre:</span> <span class="v">Luna</span>
+  <span class="k">edad:</span> <span class="v">3</span>
+  <span class="k">vacunas:</span>
+    <span class="v">- rabia</span>
+    <span class="v">- moquillo</span></pre>
+   <div class="warn"><b>¡Cuidado con la indentación!</b> YAML <b>prohíbe los tabuladores</b> (TAB). Usá <b>2 espacios</b> por nivel. Es la causa #1 de errores en YAML.</div>`},
+
+  {n:5,title:'Explorador de estructura',type:'sim',group:'Sintaxis',audio:'audios/scene_05.mp3',sim:'simulaciones/03_explorador.html',
+   lead:'Editá YAML y mirá cómo se transforma en un árbol navegable. Haz clic en los nodos para plegarlos.',
+   body:`<p>La mejor forma de entender cómo YAML organiza la información es <b>verlo como un árbol</b>. Cada clave es una rama, cada valor es una hoja. En la simulación vas a editar el texto y ver el árbol actualizarse al instante.</p>
+   <div class="tip"><b>Truco:</b> hacé clic en cualquier nodo con ▼ para plegarlo y verlo más limpio. Es exactamente así como una máquina "entiende" tu YAML.</div>`},
+
+  {n:6,title:'Quiz: Fundamentos de YAML',type:'quiz',group:'Sintaxis',audio:'audios/scene_06.mp3',
+   lead:'4 preguntas para fijar los fundamentos: qué es, sintaxis, listas e indentación.',
+   quiz:[
+    {q:'¿Qué significa el acrónimo YAML?',o:['Yet Another Markup Language','YAML Ain\'t Markup Language','YAML A Markup Language','Yes A Markup Language'],c:1},
+    {q:'¿Cómo se separa una clave de su valor?',o:['Con un = sin espacio','Con : y un espacio','Con un guión','Con una coma'],c:1},
+    {q:'¿Cómo empieza cada elemento de una lista?',o:['Con un guión y un espacio','Con una coma','Con *','Con un punto'],c:0},
+    {q:'¿Qué prohíbe YAML para la indentación?',o:['Los espacios','Los tabuladores (TAB)','Los dos puntos','Las listas'],c:1}
+   ]},
+
+  {n:7,title:'Tipos de datos',type:'sim',group:'Tipos y errores',audio:'audios/scene_07.mp3',sim:'simulaciones/04_detector_tipos.html',
+   lead:'YAML clasifica automáticamente cada valor: texto, número entero, decimal, booleano o nulo. Aprendé a reconocerlos.',
+   body:`<p>YAML no te exige declarar el tipo: lo <b>detecta solo</b> según cómo escribís el valor.</p>
+   <table><tr><th>Escritura</th><th>Tipo detectado</th></tr>
+   <tr><td><code>Luna</code></td><td>Texto (string)</td></tr>
+   <tr><td><code>3</code></td><td>Entero (integer)</td></tr>
+   <tr><td><code>19.99</code></td><td>Decimal (float)</td></tr>
+   <tr><td><code>true</code> / <code>false</code></td><td>Booleano</td></tr>
+   <tr><td><code>null</code> o <code>~</code></td><td>Nulo (vacío intencional)</td></tr></table>
+   <div class="tip"><b>Tip:</b> si querés forzar texto (por ejemplo un número como texto), lo encerrás entre comillas: <code>"3"</code>.</div>
+   <p>En la simulación, cambiá los valores y observá cómo el detector clasifica cada uno en una tabla.</p>`},
+
+  {n:8,title:'Buenas prácticas y errores comunes',type:'sim',group:'Tipos y errores',audio:'audios/scene_08.mp3',sim:'simulaciones/05_linter.html',
+   lead:'Los 3 errores que cometen todos al empezar: TAB, indentación impar, y dos puntos sin espacio. Practicá encontrarlos.',
+   body:`<p>YAML es estricto con la forma. Estos son los errores más comunes:</p>
+   <div class="cards">
+    <div class="card"><div class="ic">⌨️</div><h3>TAB vs espacios</h3><p>YAML <b>prohíbe el TAB</b>. Siempre espacios (2 por nivel).</p></div>
+    <div class="card"><div class="ic">📏</div><h3>Indentación impar</h3><p>Mezclar 3 y 5 espacios rompe la estructura. Sé consistente.</p></div>
+    <div class="card"><div class="ic">:semicolon</div><h3>:sin espacio</h3><p><code>clave:valor</code> ❌ → debe ser <code>clave: valor</code></p></div>
+   </div>
+   <div class="tip"><b>Buenas prácticas:</b> 2 espacios por nivel · comentarios con <code>#</code> · comillas dobles solo cuando haya caracteres especiales · never mezclar TAB y espacios.</div>
+   <p>El <b>linter</b> de la simulación analiza un YAML con errores a propósito. Léelos, corrigelos en el cuadro de texto y volvé a analizar hasta que quede todo verde.</p>`},
+
+  {n:9,title:'¿Qué es una "skill"?',type:'slide',group:'Skills',audio:'audios/scene_09.mp3',
+   lead:'Una skill es una instrucción que le enseña a un asistente de IA a hacer una tarea concreta.',
+   body:`<p>Una <b>skill</b> (habilidad) es un archivo que le <b>enseña a un agente de IA</b> (como Claude) a realizar una tarea específica. En vez de pedirle cada vez lo mismo con el mismo detalle, lo escribís una vez en YAML y la IA lo "recuerda".</p>
+   <div class="cards">
+    <div class="card"><div class="ic">🎓</div><h3>Enseña una tarea</h3><p>Ej: "traducir al inglés", "resumir PDFs", "generar diagramas".</p></div>
+    <div class="card"><div class="ic">🔁</div><h3>Reutilizable</h3><p>La escribís una vez y la IA la aplica siempre igual.</p></div>
+    <div class="card"><div class="ic">📦</div><h3>Estructurada</h3><p>Tiene nombre, descripción, entradas y pasos.</p></div>
+   </div>
+   <div class="blue"><b>YAML + IA:</b> las skills se escriben en YAML porque es <b>fácil de leer para humanos</b> y <b>estructurado para máquinas</b>. Es el puente perfecto entre vos y el agente.</div>`},
+
+  {n:10,title:'Anatomía de una skill',type:'slide',group:'Skills',audio:'audios/scene_10.mp3',
+   lead:'Una skill tiene 4 partes: name, description, inputs y steps. Conocelas antes de construir la tuya.',
+   body:`<pre class="code"><span class="c"># Skill en formato YAML</span>
+<span class="k">name:</span> <span class="v">traductor</span>
+<span class="k">description:</span> <span class="v">"Traduce textos al inglés"</span>
+<span class="k">inputs:</span>
+  <span class="v">- texto_español</span>
+  <span class="v">- idioma_destino</span>
+<span class="k">steps:</span>
+  <span class="v">- detectar idioma</span>
+  <span class="v">- traducir</span>
+  <span class="v">- revisar</span></pre>
+   <table><tr><th>Campo</th><th>Para qué</th></tr>
+   <tr><td><code>name</code></td><td>Nombre corto de la habilidad.</td></tr>
+   <tr><td><code>description</code></td><td>Qué hace, en una frase.</td></tr>
+   <tr><td><code>inputs</code></td><td>Qué necesita para funcionar (lista).</td></tr>
+   <tr><td><code>steps</code></td><td>Los pasos en orden que sigue la IA.</td></tr></table>
+   <div class="tip"><b>Lo clave:</b> los <code>steps</code> le dicen a la IA <b>cómo</b> hacer la tarea, paso a paso, siempre en el mismo orden. Eso hace el resultado predecible.</div>`},
+
+  {n:11,title:'Constructor de skill',type:'sim',group:'Skills',audio:'audios/scene_11.mp3',sim:'simulaciones/06_constructor_skill.html',
+   lead:'Creá tu propia skill rellenando el formulario. El YAML se genera solo y te explicamos qué hará la IA con ella.',
+   body:`<p>Llegó el momento de programar a tu asistente <b>escribiendo solo texto</b>. Rellená los campos en la simulación: nombre, descripción, inputs y pasos. Verás el YAML formarse y una explicación de cómo Claude lo usaría.</p>
+   <div class="blue"><b>Idea:</b> intentá crear una skill <code>resumidor</code> que tome un <code>texto_largo</code> y devuelva un resumen en 3 pasos: leer, extraer ideas, redactar.</div>`},
+
+  {n:12,title:'Quiz: Skills',type:'quiz',group:'Skills',audio:'audios/scene_12.mp3',
+   lead:'4 preguntas sobre qué es una skill y su anatomía.',
+   quiz:[
+    {q:'¿Qué es una skill?',o:['Un tipo de lista','Una instrucción que enseña a la IA una tarea','Un error de sintaxis','Un formato de video'],c:1},
+    {q:'¿Qué campo describe qué hace la skill?',o:['name','description','steps','inputs'],c:1},
+    {q:'¿Qué campo lista los pasos en orden?',o:['inputs','name','steps','description'],c:2},
+    {q:'¿Por qué las skills usan YAML?',o:['Porque es obligatorio','Porque es legible para humanos y estructurado para máquinas','Porque es más rápido','Porque no hay alternativa'],c:1}
+   ]},
+
+  {n:13,title:'¿Qué es un archivo agente.md?',type:'slide',group:'Agentes',audio:'audios/scene_13.mp3',
+   lead:'Un agente.md es la "ficha de personaje" de un ayudante IA: su identidad, personalidad, conocimientos e instrucciones.',
+   body:`<p>Si una <b>skill</b> enseña <i>una tarea</i>, un <b>agente</b> es el <i>personaje completo</i> que las ejecuta. El archivo <code>agente.md</code> es su <b>ficha de personaje</b>: quién es, cómo habla, qué sabe y qué reglas sigue.</p>
+   <div class="cards">
+    <div class="card"><div class="ic">🪪</div><h3>identity</h3><p>Nombre y propósito del agente.</p></div>
+    <div class="card"><div class="ic">🎭</div><h3>personality</h3><p>Tono y forma de expresarse.</p></div>
+    <div class="card"><div class="ic">📚</div><h3>knowledge</h3><p>Temas que domina.</p></div>
+    <div class="card"><div class="ic">📏</div><h3>instructions</h3><p>Reglas que sigue al responder.</p></div>
+   </div>
+   <div class="tip"><b>Skill vs Agente:</b> la skill = <i>cómo</i> hacer una tarea. El agente = <i>quién</i> la hace y <i>cómo</i> se comunica. Un agente puede tener muchas skills.</div>`},
+
+  {n:14,title:'Estructura de agente.md',type:'sim',group:'Agentes',audio:'audios/scene_14.mp3',sim:'simulaciones/07_constructor_agente.html',
+   lead:'Dale identidad a tu propio agente IA. Rellená los campos y mira cómo se arma su ficha en YAML.',
+   body:`<pre class="code"><span class="c"># agente.md — Ficha del agente</span>
+<span class="k">identity:</span>
+  <span class="k">name:</span> <span class="v">"Tutor Mate"</span>
+  <span class="k">purpose:</span> <span class="v">"Enseñar matemáticas con ejemplos"</span>
+<span class="k">personality:</span>
+  <span class="k">tone:</span> <span class="v">"paciente y motivador"</span>
+<span class="k">knowledge:</span>
+  <span class="v">- "Álgebra"</span>
+  <span class="v">- "Geometría"</span>
+<span class="k">instructions:</span>
+  <span class="v">- "Usar ejemplos visuales"</span>
+  <span class="v">- "Confirmar el nivel del alumno"</span></pre>
+   <p>En la simulación creás tu agente: nombre, propósito, tono, temas y reglas. Vas a verlo cobrar forma como una ficha YAML lista para usar.</p>`},
+
+  {n:15,title:'Ejemplo completo de agente.md',type:'slide',group:'Agentes',audio:'audios/scene_15.mp3',
+   lead:'Veamos un agente real completo: "Chef Casero", que da recetas adaptadas al cocinero.',
+   body:`<pre class="code"><span class="c"># agente.md — Chef Casero</span>
+<span class="k">identity:</span>
+  <span class="k">name:</span> <span class="v">"Chef Casero"</span>
+  <span class="k">purpose:</span> <span class="v">"Sugerir recetas caseras fáciles"</span>
+<span class="k">personality:</span>
+  <span class="k">tone:</span> <span class="v">"amable y motivador"</span>
+<span class="k">knowledge:</span>
+  <span class="v">- "Cocina tradicional"</span>
+  <span class="v">- "Recetas rápidas"</span>
+  <span class="v">- "Sustitución de ingredientes"</span>
+<span class="k">instructions:</span>
+  <span class="v">- "Preguntar qué ingredientes tiene"</span>
+  <span class="v">- "Adaptar al nivel del cocinero"</span>
+  <span class="v">- "Nunca sugerir platos con alcohol"</span></pre>
+   <div class="tip"><b>Cómo lo usaría Claude:</b> al leer este archivo, Claude se vuelve "Chef Casero": te pregunta los ingredientes, adapta la receta a tu nivel y evita sugerir alcohol. ¡Acabas de crear un personaje IA con solo texto!</div>
+   <div class="blue"><b>Patrón poderoso:</b> un <code>CLAUDE.md</code> de proyecto + varios <code>agente.md</code> + varias skills = un equipo de IA completo, todo definido en YAML/Markdown.</div>`},
+
+  {n:16,title:'¿Qué es CLAUDE.md y por qué importa YAML aquí?',type:'sim',group:'CLAUDE.md',audio:'',sim:'simulaciones/08_simulador_claude_md.html',
+   lead:'CLAUDE.md son las instrucciones de proyecto que Claude lee automáticamente en cada sesión. YAML/Markdown las estructuran.',
+   body:`<p>El <b>CLAUDE.md</b> es el archivo más importante de un proyecto con IA: son las <b>instrucciones que Claude lee automáticamente cada vez que abre el proyecto</b>. Le dicen el tono, el idioma, las reglas y cómo debe comportarse.</p>
+   <div class="cards">
+    <div class="card"><div class="ic">📄</div><h3>Instrucciones de proyecto</h3><p>No es código: es una guía que Claude respeta en cada sesión.</p></div>
+    <div class="card"><div class="ic">🔄</div><h3>Cambia = cambia Claude</h3><p>Editás el archivo y el comportamiento del agente cambia al instante.</p></div>
+    <div class="card"><div class="ic">🏗️</div><h3>Estructurado</h3><p>Usa secciones Markdown + listas estilo YAML para las reglas.</p></div>
+   </div>
+   <div class="blue"><b>¿Por qué YAML importa aquí?</b> Las reglas de un <code>CLAUDE.md</code> se organizan como <b>listas estructuradas</b> (iguales a las de YAML: <code>- regla</code>). La indentación y los <code>key: value</code> que aprendiste son <b>exactamente</b> lo que hace legible un archivo de proyecto. Dominar YAML = dominar cómo le hablás a la IA.</div>
+   <p>En la simulación configurás tu proyecto (nombre, tono, reglas) y ves: (1) cómo se genera el <code>CLAUDE.md</code> y (2) cómo Claude "responde" al leerlo.</p>`},
+
+  {n:17,title:'Material de apoyo: videos y enlaces',type:'video',group:'Material de apoyo',audio:'',
+   lead:'2 videos descargados sobre YAML y 3 enlaces de referencia para seguir aprendiendo.',
+   body:`<div class="vidpl">
+     <div class="player">
+       <video id="vidMain" controls preload="none" src="${VIDEOS[0].file}"></video>
+       <div class="now" id="vidNow">▶ ${VIDEOS[0].title}<small>Video 1 de 2</small></div>
+     </div>
+     <div class="list"><div class="vh">📺 Playlist local (2 videos)</div>${VIDEOS.map(v=>`<div class="vitem${v.i===1?' active':''}" onclick="playVid(${v.i})"><span class="vi">${v.i}</span><span class="vt">${v.title}</span></div>`).join('')}</div>
+   </div>
+   <div class="cat">🔗 Enlaces de interés</div>
+   <div class="links">${LINKS.map(l=>`<a class="linkcard" href="${l.h}" target="_blank" rel="noopener"><span class="lic">${l.ic}</span><span><span class="lt">${l.t}</span><br><span class="ld">${l.d}</span><br><span class="lh">${l.h}</span></span></a>`).join('')}</div>
+   <div class="tip"><b>Tip:</b> guardá estos enlaces en favoritos. La referencia de <i>Learn YAML in Y minutes</i> es la más rápida para repasar sintaxis.</div>`},
+
+  {n:18,title:'Proyecto final: armá tu equipo de IA',type:'slide',group:'Cierre',audio:'audios/scene_16.mp3',
+   lead:'Tu reto: usar lo aprendido para definir un proyecto con CLAUDE.md + un agente + una skill, todo en YAML.',
+   body:`<p>Llegó el momento de juntar todo. Tu misión: imaginar un pequeño proyecto y escribir sus 3 piezas en YAML:</p>
+   <div class="cards">
+    <div class="card"><div class="ic">📄</div><h3>1. CLAUDE.md</h3><p>Nombre del proyecto, tono y 3-4 reglas (las que aprendiste en la sección 16).</p></div>
+    <div class="card"><div class="ic">🤖</div><h3>2. agente.md</h3><p>Un agente con identity, personality, knowledge e instructions (sección 14).</p></div>
+    <div class="card"><div class="ic">🎓</div><h3>3. skill</h3><p>Una skill con name, description, inputs y steps (sección 10).</p></div>
+   </div>
+   <div class="blue"><b>Ejemplo:</b> proyecto "Asesor de Ventas" → CLAUDE.md (tono profesional, reglas de precios) + agente "Vendi" (conoce catálogo) + skill "cotizar" (inputs: producto, cantidad; steps: buscar precio, calcular, armar propuesta).</div>
+   <div class="tip"><b>Revisitá las simulaciones</b> 06, 07 y 08 para generar cada pieza automáticamente y luego copiar el YAML.</div>`},
+
+  {n:19,title:'Resumen y despedida',type:'finale',group:'Cierre',audio:'audios/scene_17.mp3',
+   lead:'Repasamos todo lo aprendido y te despedimos con próximos pasos.',
+   body:`<div class="cat">📋 Lo que aprendiste</div>
+   <table><tr><th>Concepto</th><th>Clave</th></tr>
+   <tr><td>¿Qué es YAML?</td><td>Lenguaje de datos legible para humanos y máquinas.</td></tr>
+   <tr><td>Sintaxis básica</td><td><code>clave: valor</code> (con espacio después de :).</td></tr>
+   <tr><td>Listas</td><td>Cada elemento con <code>- </code> (guión y espacio).</td></tr>
+   <tr><td>Indentación</td><td>2 espacios por nivel, <b>nunca TAB</b>.</td></tr>
+   <tr><td>Tipos</td><td>texto, entero, decimal, booleano, nulo.</td></tr>
+   <tr><td>Skill</td><td>Enseña una tarea (name, description, inputs, steps).</td></tr>
+   <tr><td>agente.md</td><td>Ficha de un agente IA (identity, personality, knowledge, instructions).</td></tr>
+   <tr><td>CLAUDE.md</td><td>Instrucciones de proyecto que Claude lee cada sesión.</td></tr></table>
+   <div class="finale">
+     <div class="big">🎉</div>
+     <h2>¡Lo lograste!</h2>
+     <p class="lead">Ya sabés qué es YAML, cómo se escribe, sus tipos, buenas prácticas y cómo se usa para crear skills, agentes y el CLAUDE.md. ¡Gracias! Has completado el curso.</p>
+     <div class="cta">
+       <a href="#" onclick="go(0);return false;">↺ Volver al inicio</a>
+       <a href="simulaciones/08_simulador_claude_md.html" target="_blank" class="alt">Abrir simulador CLAUDE.md</a>
+     </div>
+   </div>`}
+];
+
+/* ---------- Render (mirror CLI reference) ---------- */
+const nav=document.getElementById('nav');
+const content=document.getElementById('content');
+let current=0;
+let visited=new Set();
+
+let lastGroup='';
+SECTIONS.forEach((s,i)=>{
+  if(s.group!==lastGroup){const t=document.createElement('div');t.className='sec-title';t.textContent=s.group;nav.appendChild(t);lastGroup=s.group;}
+  const a=document.createElement('a');a.href='#'+s.n;a.dataset.i=i;
+  const badge=s.type==='quiz'?'<span class="num">Q</span>':s.type==='sim'?'<span class="num">▶</span>':s.type==='video'?'<span class="num">🎬</span>':s.type==='finale'?'<span class="num">🎉</span>':'<span class="num">'+s.n+'</span>';
+  a.innerHTML=badge+' '+s.title;
+  a.onclick=(e)=>{e.preventDefault();go(i);};
+  nav.appendChild(a);
+});
+
+function buildSection(s){
+  const el=document.createElement('section');
+  let badge='';
+  if(s.type==='quiz')badge='<span class="badge q">Quiz</span> ';
+  else if(s.type==='sim')badge='<span class="badge sim">Simulación</span> ';
+  else if(s.type==='video')badge='<span class="badge sim">Material</span> ';
+  else if(s.group==='CLAUDE.md')badge='<span class="badge new">NUEVO · Destacado</span> ';
+  let html='<h2>'+s.n+'. '+s.title+'</h2>'+badge+'<p class="lead">'+s.lead+'</p>';
+  if(s.audio){html+='<div class="audio"><span class="lbl">🔊 Narración</span><audio controls preload="none" src="'+s.audio+'"></audio></div>';}
+  html+=s.body;
+  if(s.sim){const h=s.h||'h-sim';html+='<div class="frame-wrap"><div class="fhead"><span>Simulación interactiva</span><span>'+s.sim.split('/').pop()+'</span></div><iframe src="'+s.sim+'" class="'+h+'" loading="lazy"></iframe></div>';}
+  if(s.type==='quiz'){
+    html+='<div class="quiz" id="quiz'+s.n+'">';
+    s.quiz.forEach((q,qi)=>{
+      html+='<div class="q"><div class="qt">'+(qi+1)+'. '+q.q+'</div>';
+      q.o.forEach((o,oi)=>{html+='<label class="opt" data-q="'+qi+'" data-o="'+oi+'" onclick="selQuiz('+s.n+','+qi+','+oi+',this)">'+o+'</label>';});
+      html+='</div>';
+    });
+    html+='<button class="check" onclick="checkQuiz('+s.n+')">Verificar respuestas</button><div class="score" id="score'+s.n+'"></div></div>';
+  }
+  html+='<div class="nav-btns"><button onclick="prev()">← Anterior</button><button onclick="next()">Siguiente →</button></div>';
+  el.innerHTML=html;
+  return el;
+}
+
+SECTIONS.forEach((s,i)=>{const el=buildSection(s);el.id='sec'+i;content.appendChild(el);});
+
+function pauseAllAudio(){document.querySelectorAll('audio').forEach(a=>{try{a.pause();}catch(e){}});document.querySelectorAll('video').forEach(a=>{try{a.pause();}catch(e){}});}
+function playVid(i){
+  const v=VIDEOS.find(x=>x.i===i);if(!v)return;
+  const vid=document.getElementById('vidMain');if(!vid)return;
+  vid.src=v.file;vid.load();vid.play().catch(()=>{});
+  const now=document.getElementById('vidNow');
+  if(now)now.innerHTML='▶ '+v.title+'<small>Video '+v.i+' de '+VIDEOS.length+'</small>';
+  document.querySelectorAll('.vidpl .list .vitem').forEach(it=>it.classList.remove('active'));
+  const items=document.querySelectorAll('.vidpl .list .vitem');const idx=VIDEOS.findIndex(x=>x.i===i);if(items[idx])items[idx].classList.add('active');
+}
+function go(i){
+  pauseAllAudio();
+  current=i;
+  document.querySelectorAll('section').forEach((s,idx)=>s.classList.toggle('active',idx===i));
+  document.querySelectorAll('nav a').forEach(a=>a.classList.toggle('active',+a.dataset.i===i));
+  visited.add(i);
+  updateProg();
+  window.scrollTo(0,0);
+  document.getElementById('side').classList.remove('open');
+}
+function next(){if(current<SECTIONS.length-1)go(current+1);}
+function prev(){if(current>0)go(current-1);}
+function updateProg(){const p=Math.round(visited.size/SECTIONS.length*100);document.getElementById('prog').style.width=p+'%';document.getElementById('pct').textContent=p+'%';}
+
+const quizState={};
+function selQuiz(n,qi,oi,el){
+  const quiz=document.getElementById('quiz'+n);if(quiz.dataset.locked)return;
+  quiz.querySelectorAll('.opt[data-q="'+qi+'"]').forEach(o=>o.classList.remove('sel'));
+  el.classList.add('sel');
+  quizState[n]=quizState[n]||{};quizState[n][qi]=oi;
+}
+function checkQuiz(n){
+  const s=SECTIONS.find(x=>x.n===n);const quiz=document.getElementById('quiz'+n);let correct=0;
+  s.quiz.forEach((q,qi)=>{
+    const chosen=quizState[n]&&quizState[n][qi];
+    quiz.querySelectorAll('.opt[data-q="'+qi+'"]').forEach((o)=>{const oi=+o.dataset.o;o.classList.remove('correct','wrong');if(oi===q.c){o.classList.add('correct');}else if(oi===chosen){o.classList.add('wrong');}});
+    if(chosen===q.c)correct++;
+  });
+  quiz.dataset.locked='1';
+  const pct=Math.round(correct/s.quiz.length*100);
+  const msg=pct>=80?'🏆 ¡Excelente!':pct>=50?'👍 Bien, repasá lo que falló.':'📖 Repasá la sección y volvé a intentarlo.';
+  document.getElementById('score'+n).innerHTML='Puntaje: <span style="color:var(--green)">'+correct+'/'+s.quiz.length+'</span> ('+pct+'%) — '+msg+' <button class="check" style="margin-left:.5rem" onclick="resetQuiz('+n+')">Reintentar</button>';
+}
+function resetQuiz(n){const quiz=document.getElementById('quiz'+n);delete quiz.dataset.locked;quiz.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel','correct','wrong'));document.getElementById('score'+n).innerHTML='';delete quizState[n];}
+
+document.addEventListener('keydown',e=>{
+  if(e.target.tagName==='INPUT'||e.target.tagName==='AUDIO'||e.target.isContentEditable)return;
+  if(e.key==='ArrowRight'&&e.altKey)next();
+  if(e.key==='ArrowLeft'&&e.altKey)prev();
+});
+
+function startCourse(){const c=document.getElementById('cover');if(c){c.classList.add('hidden');setTimeout(()=>c.remove(),250);}go(0);}
+go(0);
+</script>
+</body>
+</html>
